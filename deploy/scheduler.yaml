@@ -9,17 +9,18 @@ metadata:
 spec:
   containers:
     - command:
-        - kube-scheduler
-        - --config=/etc/kubernetes/scheduler/config.yaml
-      image: k8s.gcr.io/kube-scheduler:v1.15.0
+        - /bin/sh
+        - -c
+        - mkfifo /tmp/pipe; (tee -a /var/log/kube-scheduler.log < /tmp/pipe & ) ; exec
+          /usr/local/bin/kube-scheduler --config=/var/lib/kube-scheduler/config.yaml --leader-elect=true
+          --v=2 > /tmp/pipe 2>&1
+      image: k8s.gcr.io/kube-scheduler:v1.13.5
       imagePullPolicy: IfNotPresent
       livenessProbe:
-        failureThreshold: 8
         httpGet:
           host: 127.0.0.1
           path: /healthz
           port: 10251
-          scheme: HTTP
         initialDelaySeconds: 15
         timeoutSeconds: 15
       name: kube-scheduler
@@ -38,6 +39,9 @@ spec:
           readOnly: true
   hostNetwork: true
   priorityClassName: system-cluster-critical
+  tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
   volumes:
     - name: kubeconfig
       hostPath:
