@@ -11,12 +11,7 @@ spec:
     - command:
         - kube-scheduler
         - --config=/etc/kubernetes/scheduler/config.yaml
-        - --leader-elect=true
-        - --v=2
-        - --logtostderr=false
-        - --alsologtostderr
-        - --log-file=/var/log/kube-scheduler.log
-      image: k8s.gcr.io/kube-scheduler:v1.18.9
+      image: k8s.gcr.io/kube-scheduler:v1.15.0
       imagePullPolicy: IfNotPresent
       livenessProbe:
         failureThreshold: 8
