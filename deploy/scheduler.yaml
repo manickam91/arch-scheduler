@@ -12,7 +12,7 @@ spec:
         - /bin/sh
         - -c
         - mkfifo /tmp/pipe; (tee -a /var/log/kube-scheduler.log < /tmp/pipe & ) ; exec
-          /usr/local/bin/kube-scheduler --config=/var/lib/kube-scheduler/config.yaml --leader-elect=true
+          /usr/local/bin/kube-scheduler --config=/etc/kubernetes/scheduler/config.yaml --leader-elect=true
           --v=2 > /tmp/pipe 2>&1
       image: k8s.gcr.io/kube-scheduler:v1.13.5
       imagePullPolicy: IfNotPresent
